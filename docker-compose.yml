@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+  app:
+    build:
+      dockerfile: docker/Dockerfile
+      context: .
+    environment: 
+      PGUSER: url_shortener
+      PGPASSWORD: UrLSh0rTener!
+      PGDATABASE: url_shortener
+      PGPORT: 5432
+      PGHOST: db
+    ports:
+      - "4000:4000"
+    depends_on: 
+      - db
+    volumes:
+      - .:/app
+    entrypoint: docker/app/entrypoint.sh
+    command: mix phx.server
+  db:
+    image: postgres:13-alpine
+    environment: 
+      POSTGRES_USER: url_shortener
+      POSTGRES_PASSWORD: UrLSh0rTener!
+      PGDATA: /var/lib/postgresql/data/PGDATA
+    volumes:
+      - postgres:/var/lib/postgresql/data
+volumes:
+  postgres:
